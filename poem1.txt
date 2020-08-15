@@ -5,6 +5,7 @@ red
 pink
 black
 green
+yellow
 orange
 blue
 
