@@ -93,7 +93,8 @@ formatted as a single column. Ensure no duplicate data, and order by
 the member name. */
 
 
-SELECT DISTINCT m.firstname, m.surname, f.name AS facility
+SELECT DISTINCT m.firstname || ' ' || m.surname as member_name, 
+                f.name AS facility
 FROM Members AS m
 LEFT JOIN Bookings AS b ON b.memid = m.memid
 LEFT JOIN Facilities AS f ON f.facid = b.facid
@@ -163,11 +164,13 @@ ORDER BY m.firstname
 /* Q12: Find the facilities with their usage by member, but not guests */
 
 SELECT  DISTINCT f.name as facility,
-        m.firstname, m.surname
+        m.firstname || ' ' || m.surname as member_name
 FROM Facilities as f 
 LEFT JOIN Bookings AS b ON b.facid = f.facid
 LEFT JOIN Members AS m ON b.memid = m.memid
-WHERE m.memid > 0
+WHERE m.memid >= 1
+ORDER BY f.name
 
 /* Q13: Find the facilities usage by month, but not guests */
-
+SELECT 		COUNT(b.starttime) AS usage
+			f.name as facility,
