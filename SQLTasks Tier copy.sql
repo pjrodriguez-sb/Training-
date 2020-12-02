@@ -154,12 +154,12 @@ WHERE  f.initialoutlay < 1000
 
 /* Q11: Produce a report of members and who recommended them in alphabetic surname,firstname order */
 
-SELECT      m.memid,
-            m.recommendedby,
-            m.firstname, m.surname
-FROM Members as m
-WHERE m.recommendedby >= 1
-ORDER BY m.firstname
+Select  m.firstname || ' ' || m.surname as member_name,
+        r.firstname || ' ' || r.surname as recommendedby_name
+From members as m
+Join members as r
+On m.recommendedby = r.memid
+ORDER BY m.surname
 
 /* Q12: Find the facilities with their usage by member, but not guests */
 
@@ -172,5 +172,12 @@ WHERE m.memid >= 1
 ORDER BY f.name
 
 /* Q13: Find the facilities usage by month, but not guests */
-SELECT 		COUNT(b.starttime) AS usage
-			f.name as facility,
+SELECT
+   f.name as facility,
+   STRFTIME('%Y-%m', b.starttime) AS monthly,
+   count(distinct b.bookid) as booking_count
+FROM Facilities as f
+LEFT JOIN Bookings as b
+ON f.facid = b.facid
+WHEN f.facid >= 1
+GROUP BY facility, monthly
